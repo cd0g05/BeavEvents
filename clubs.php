@@ -23,8 +23,10 @@ $result = mysqli_query($link, $query) or die(mysqli_error($link));
 
 echo "<table border='1'>
 <tr>
-    <th>ID</th>
     <th>Name</th>
+    <th>Advisor</th>
+    <th>Category</th>
+    <th>clubID</th>
 </tr>";
 
 while ($row = mysqli_fetch_assoc($result)) {
