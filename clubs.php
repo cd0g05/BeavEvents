@@ -10,41 +10,36 @@
 <body>
 
 <?php
-$clubs = [
-  [
-    'club_id' => 1,
-    'name' => 'Chess Club',
-    'members' => [
-      [ 'user_id' => '001', 'name' => 'Darth Vader', 'role' => 'Sith Lord', 'email' => 'vaderd@oregonstate.edu' ],
-      [ 'user_id' => '002', 'name' => 'Proffessor Dumbledor', 'role' => 'Headmaster', 'email' => 'dumbldorep@oregonstate.edu' ]
-    ]
-  ],
-  [
-    'club_id' => 2,
-    'name' => 'Ultimate Frisbee Club',
-    'members' => [
-      [ 'user_id' => '003', 'name' => 'Carter Cripe', 'role' => 'Dwarves Captian', 'email' => 'cripeca@oregonstate.edu' ],
-      [ 'user_id' => '004', 'name' => 'David Park', 'role' => 'Member', 'email' => 'david@example.com' ]
-    ]
-  ],
-  [
-    'club_id' => 3,
-    'name' => 'Pickleball Club',
-    'members' => [
-      [ 'user_id' => '005', 'name' => 'Anakin Skywalker', 'role' => 'Jedi Knight', 'email' => 'skywalkera@oregonstate.edu' ],
-      [ 'user_id' => '006', 'name' => 'Gandalf the Grey', 'role' => 'Member', 'email' => 'greyg@oregonstate.edu' ]
-    ]
-  ],
-  [
-    'club_id' => 4,
-    'name' => 'Robotics Club',
-    'members' => [
-      [ 'user_id' => '007', 'name' => 'Clara Kim', 'role' => 'Vice President', 'email' => 'clara@example.com' ],
-      [ 'user_id' => '008', 'name' => 'David Park', 'role' => 'Member', 'email' => 'david@example.com' ]
-    ]
-  ]
-];
-?>
+$link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_sextono', '0244', 'cs340_sextono');
+
+if (!$link) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+
+//
+$query = "SELECT * FROM CLUB";
+$result = mysqli_query($link, $query) or die(mysqli_error($link));
+
+echo "<table border='1'>
+<tr>
+    <th>ID</th>
+    <th>Name</th>
+</tr>";
+
+while ($row = mysqli_fetch_assoc($result)) {
+    echo "<tr>";
+    echo "<td>".$row['name']."</td>";
+    echo "<td>".$row['advisor']."</td>";    
+    echo "<td>".$row['category']."</td>";
+    echo "<td>".$row['clubID']."</td>";
+    echo "</tr>";
+}
+
+echo "</table>";
+
+
+mysqli_close($link);
 
 <div class="home-wrapper">
   <header class="home-header">
