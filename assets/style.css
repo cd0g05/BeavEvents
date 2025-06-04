@@ -268,15 +268,15 @@ button:hover {
 .all-club-box {
   /* margin-left: 48px; */
   padding-top: 10px;
-  width: 75%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
   /* border: 1px solid red; */
 
 }
-/* 
-* {
+
+/* * {
   border: 1px solid red;
 } */
 
@@ -289,4 +289,22 @@ button:hover {
 
 .bullet-list {
     font-size: 20px;
+}
+.club-subheader-row {
+  display: flex;
+  /* justify-content: space-between; */
+  gap: 10%;
+  align-items: center;
+}
+
+.add-club-form-container {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+  opacity: 0;
+}
+
+.add-club-form-container.open {
+  max-height: 200px; /* adjust as needed */
+  opacity: 1;
 }
