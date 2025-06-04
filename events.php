@@ -8,48 +8,7 @@
 
 </head>
 <body>
-<?php
-$link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_sextono', '0244', 'cs340_sextono');
-
-if (!$link) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-
-
-//club
-$query = "SELECT * FROM EVENTS";
-$result = mysqli_query($link, $query) or die(mysqli_error($link));
-
-echo "<table border='1'>
-<tr>
-    <th>Title</th>
-    <th>Description</th>
-    <th>Event Date</th>
-    <th>Location</th>
-    <th>Time</th>
-    <th>Event ID</th>
-    <th>Club ID</th>
-</tr>";
-
-while ($row = mysqli_fetch_assoc($result)) {
-    echo "<tr>";
-    echo "<td>".$row['title']."</td>";
-    echo "<td>".$row['description']."</td>";    
-    echo "<td>".$row['eventDate']."</td>";
-    echo "<td>".$row['location']."</td>";
-    echo "<td>".$row['time']."</td>";
-    echo "<td>".$row['eventID']."</td>";
-    echo "<td>".$row['clubID']."</td>";
-
-
-    echo "</tr>";
-}
-
-echo "</table>";
-
-
-mysqli_close($link);
-?><div class="home-wrapper">
+<div class="home-wrapper">
   <header class="home-header">
     <img src="assets/NoBackLogo.png" alt="BeavEvents Logo" class="logo" />
     <div class="head-col">
@@ -71,44 +30,49 @@ mysqli_close($link);
   <main class="home-content">
     <div class="body-text">
       <strong class="sub-subheader">Create an Event: <button class="tut-btn">Add New Event</button></strong>
-      
-      <div class="all-club-box">
-        <?php foreach ($events as $event): ?>
-          <div class="club-box">
-            <div class="club-header-row">
-              <h2><?= htmlspecialchars($event['name']) ?></h2>
-              <div class="table-button-box">
-                <button class="table-button">Add new Club</button>
-                <button class="table-button">Delete Event</button>
-              </div>
-            </div>
-            <table style="width: 100%; border-collapse: collapse;">
-              <thead class="club-headers">
-                <tr>
-                  <th>Club</th>
-                  <th>Advisor</th>
-                  <th>Club ID</th>
-                  <th>#RSVPs</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php foreach ($event['clubs'] as $club): ?>
-                  <tr>
-                    <td><?= htmlspecialchars($club['name']) ?></td>
-                    <td><?= htmlspecialchars($club['advisor']) ?></td>
-                    <td><?= htmlspecialchars($club['club_id']) ?></td>
-                    <td><?= htmlspecialchars($club['rsvps']) ?></td>
-                  </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
-          </div>
-        <?php endforeach; ?>
-      </div>
-    </div>
+        <?php
+          $link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_sextono', '0244', 'cs340_sextono');
+
+          if (!$link) {
+              die("Connection failed: " . mysqli_connect_error());
+          }
 
 
-    
+          //club
+          $query = "SELECT * FROM EVENTS";
+          $result = mysqli_query($link, $query) or die(mysqli_error($link));
+
+          echo "<table border='1'>
+          <tr>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Event Date</th>
+              <th>Location</th>
+              <th>Time</th>
+              <th>Event ID</th>
+              <th>Club ID</th>
+          </tr>";
+
+          while ($row = mysqli_fetch_assoc($result)) {
+              echo "<tr>";
+              echo "<td>".$row['title']."</td>";
+              echo "<td>".$row['description']."</td>";    
+              echo "<td>".$row['eventDate']."</td>";
+              echo "<td>".$row['location']."</td>";
+              echo "<td>".$row['time']."</td>";
+              echo "<td>".$row['eventID']."</td>";
+              echo "<td>".$row['clubID']."</td>";
+
+
+              echo "</tr>";
+          }
+
+          echo "</table>";
+
+
+          mysqli_close($link);
+          ?>
+    </div>   
   </main>
 
   <footer class="footer">

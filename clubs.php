@@ -8,41 +8,6 @@
 
 </head>
 <body>
-
-<?php
-$link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_sextono', '0244', 'cs340_sextono');
-
-if (!$link) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-
-
-//
-$query = "SELECT * FROM CLUB";
-$result = mysqli_query($link, $query) or die(mysqli_error($link));
-
-echo "<table border='1'>
-<tr>
-    <th>Name</th>
-    <th>Advisor</th>
-    <th>Category</th>
-    <th>clubID</th>
-</tr>";
-
-while ($row = mysqli_fetch_assoc($result)) {
-    echo "<tr>";
-    echo "<td>".$row['name']."</td>";
-    echo "<td>".$row['advisor']."</td>";    
-    echo "<td>".$row['category']."</td>";
-    echo "<td>".$row['clubID']."</td>";
-    echo "</tr>";
-}
-
-echo "</table>";
-
-
-mysqli_close($link);
-?>
 <div class="home-wrapper">
   <header class="home-header">
     <img src="assets/NoBackLogo.png" alt="BeavEvents Logo" class="logo" />
@@ -65,6 +30,39 @@ mysqli_close($link);
   <div class="home-content">
     <div class="body-text">
       <strong class="sub-subheader">Create a Club: <button class="tut-btn">Add New Club</button></strong>
+
+        <?php
+        $link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_sextono', '0244', 'cs340_sextono');
+
+        if (!$link) {
+            die("Connection failed: " . mysqli_connect_error());
+        }
+
+        $query = "SELECT * FROM CLUB";
+        $result = mysqli_query($link, $query) or die(mysqli_error($link));
+
+        echo "<table border='1'>
+        <tr>
+            <th>Name</th>
+            <th>Advisor</th>
+            <th>Category</th>
+            <th>clubID</th>
+        </tr>";
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo "<tr>";
+            echo "<td>".$row['name']."</td>";
+            echo "<td>".$row['advisor']."</td>";    
+            echo "<td>".$row['category']."</td>";
+            echo "<td>".$row['clubID']."</td>";
+            echo "</tr>";
+        }
+
+        echo "</table>";
+
+
+        mysqli_close($link);
+        ?>
       
       <div class="all-club-box">
         <?php foreach ($clubs as $club): ?>
