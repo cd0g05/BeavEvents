@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>BeavEvents</title>
   <link rel="stylesheet" href="assets/style.css">
+  <link rel="icon" type="image/png" href="assets/InnerBgLogo.png">
+
 </head>
 <body>
 
