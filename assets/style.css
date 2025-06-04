@@ -243,6 +243,14 @@ button:hover {
   max-height: 30px;
   flex-shrink: 0;
 }
+.small-table-button {
+  padding: 0.2rem 0.4rem;
+  /* padding-left: 20px; */
+  align-items: center;
+  font-size: 12px;
+  /* max-height: 20px; */
+  flex-shrink: 0;
+}
 
 .table-button-box {
   padding-left: 20px;

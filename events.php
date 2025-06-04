@@ -91,6 +91,7 @@
                   <th>Advisor</th>
                   <th>Club ID</th>
                   <th>#RSVPs</th>
+                  <th> </th>
               </tr>
           </thead>
           <tbody>";
@@ -101,6 +102,16 @@
               echo "<td>" . htmlspecialchars($club['advisor']) . "</td>";
               echo "<td>" . htmlspecialchars($club['clubID']) . "</td>";
               echo "<td>" . htmlspecialchars($club['club_rsvp_count']) . "</td>";
+
+              // Add Delete Club form
+              echo "<td>";
+              echo "<form action='removeclubfromevent.php' method='POST';'>";
+              echo "<input type='hidden' name='eventID' value='" . htmlspecialchars($eventID) . "'>";
+              echo "<input type='hidden' name='clubID' value='" . htmlspecialchars($club['clubID']) . "'>";
+              echo "<button type='submit' class='small-table-button'>Remove</button>";
+              echo "</form>";
+              echo "</td>";
+
               echo "</tr>";
           }
 
