@@ -27,10 +27,8 @@ echo "<table border='1'>
     <th>Event Date</th>
     <th>Location</th>
     <th>Time</th>
-    <th>Event ID<th>
+    <th>Event ID</th>
     <th>Club ID</th>
-
-
 </tr>";
 
 while ($row = mysqli_fetch_assoc($result)) {
