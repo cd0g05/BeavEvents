@@ -40,7 +40,7 @@ echo "</table>";
 
 
 mysqli_close($link);
-
+?>
 <div class="home-wrapper">
   <header class="home-header">
     <img src="assets/NoBackLogo.png" alt="BeavEvents Logo" class="logo" />
