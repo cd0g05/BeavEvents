@@ -31,7 +31,7 @@
   <main class="home-content">
     <p class="body-text">
       <strong class="subheader">About this website:</strong><br />
-      Our project, BeaverConnect, is a website that helps students at Oregon State University find and get involved in campus events and clubs. Clubs can post and manage their events, and students can browse what's coming up, RSVP, and leave feedback afterward. Students can also join clubs through the site, making it easy to stay connected with what’s happening around campus. Club officers can track attendance and feedback, while students get a personalized view of events they care about. The goal is to make it easier for everyone to get involved and stay connected at OSU. 
+      Our project, BeavEvents, is a website that helps students at Oregon State University find and get involved in campus events and clubs. Clubs can post and manage their events, and students can browse what's coming up, RSVP, and leave feedback afterward. Students can also join clubs through the site, making it easy to stay connected with what’s happening around campus. Club officers can track attendance and feedback, while students get a personalized view of events they care about. The goal is to make it easier for everyone to get involved and stay connected at OSU. 
       <br /><br />
       For more information about how to use the website, click the "Tutorial" button below.
       <a href="tutorial.php"><button class="tut-btn">Tutorial</button></a>
