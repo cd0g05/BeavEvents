@@ -9,40 +9,49 @@
 </head>
 <body>
 <?php
-$events = [
-  [
-    'event_id' => 1,
-    'name' => 'Beaver Brawl',
-    'clubs' => [
-      [ 'club_id' => '001', 'advisor' => 'Darth Vader', 'name' => 'OSU Ultimate Frisbee Club - Beavs', 'rsvps' => '18' ],
-      [ 'club_id' => '002', 'advisor' => 'Proffessor Dumbledor', 'name' => 'OSU Ultimate Frisbee Club - Dwarves', 'rsvps' => '11' ]
-    ]
-  ],
-  [
-    'event_id' => 2,
-    'name' => 'Chess Tournament',
-    'clubs' => [
-      [ 'club_id' => '003', 'advisor' => 'Carter Cripe', 'name' => 'Chess Club', 'rsvps' => '27' ],
-    ]
-  ],
-  [
-    'event_id' => 3,
-    'name' => 'Pickleball Tournamnet',
-    'clubs' => [
-      [ 'club_id' => '004', 'advisor' => 'Anakin Skywalker', 'name' => 'OSU Pickleball Club', 'rsvps' => '17' ],
-      [ 'club_id' => '005', 'advisor' => 'Gandalf the Grey', 'name' => 'UO Pickleball Club', 'rsvps' => '34' ]
-    ]
-  ],
-  [
-    'event_id' => 4,
-    'name' => 'Robotics club dinner',
-    'clubs' => [
-      [ 'club_id' => '006', 'advisor' => 'Clara Kim', 'name' => 'Robotics Club', 'rsvps' => '26' ],
-    ]
-  ]
-];
-?>
-<div class="home-wrapper">
+$link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_sextono', '0244', 'cs340_sextono');
+
+if (!$link) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+
+//club
+$query = "SELECT * FROM EVENTS";
+$result = mysqli_query($link, $query) or die(mysqli_error($link));
+
+echo "<table border='1'>
+<tr>
+    <th>Title</th>
+    <th>Description</th>
+    <th>Event Date</th>
+    <th>Location</th>
+    <th>Time</th>
+    <th>Event ID<th>
+    <th>Club ID</th>
+
+
+</tr>";
+
+while ($row = mysqli_fetch_assoc($result)) {
+    echo "<tr>";
+    echo "<td>".$row['title']."</td>";
+    echo "<td>".$row['description']."</td>";    
+    echo "<td>".$row['eventDate']."</td>";
+    echo "<td>".$row['location']."</td>";
+    echo "<td>".$row['time']."</td>";
+    echo "<td>".$row['eventID']."</td>";
+    echo "<td>".$row['clubID']."</td>";
+
+
+    echo "</tr>";
+}
+
+echo "</table>";
+
+
+mysqli_close($link);
+?><div class="home-wrapper">
   <header class="home-header">
     <img src="assets/NoBackLogo.png" alt="BeavEvents Logo" class="logo" />
     <div class="head-col">
