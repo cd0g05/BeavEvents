@@ -42,10 +42,31 @@
     <!-- Main content section -->
     <main class="home-content">
       <div class="body-text">
-
+        <div class="create-event">
         <!-- Create Event Button -->
-        <strong class="sub-subheader">Create an Event: <button class="tut-btn">Add New Event</button></strong>
-        
+          <strong class="sub-subheader">Create an Event: <button class="tut-btn" onclick="toggleEventForm()">Add New Event</button></strong>
+          <div id="add-event-form-container">
+            <form action="addevent.php" method="POST" class="event-form">
+              <label>
+                Event Name: <input type="text" name="eventTitle" required>
+              </label><br>
+              <label>
+                Event Date: <input type="date" name="eventDate" required>
+              </label><br>
+              <label>
+                Event Time: <input type="time" name="eventTime" required>
+              </label><br>
+              <label>
+                Event Location: <input type="location" name="eventLocation" required>
+              </label><br>
+              <label>
+                Description (optional): <input type="text" name="eventDescription">
+              </label><br>
+              <button type="submit" class="tut-btn">Submit Event</button>
+            </form>
+          </div>
+
+        </div>
         <div class="all-club-box">
           
           <strong class="subheader">Upcoming Events:</strong>
@@ -310,6 +331,12 @@
     }
 
     </script>
-
+    <!-- Add event script -->
+    <script>
+      function toggleEventForm() {
+        const form = document.getElementById('add-event-form-container');
+        form.classList.toggle('open');
+      }
+    </script>
 </body>
 </html>

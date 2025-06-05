@@ -335,3 +335,43 @@ button:hover {
   opacity: 0;
   pointer-events: none;
 }
+.event-form {
+  background-color: #FFFFFF;
+  margin: 20px 0;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-top: 3px solid #D63F09;
+  transition: opacity 0.4s ease;
+  width: 40%;
+  /* display: none; */
+}
+.event-form input {
+  margin: 0.5rem 0;
+  padding: 0.4rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.event-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.event-form button {
+  margin-top: 0.5rem;
+}
+
+#add-event-form-container {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s ease;
+  padding: 0 0;
+  opacity: 0;
+  transition: max-height 0.4s ease, padding 0.3s ease, opacity 0.4s ease;
+}
+
+#add-event-form-container.open {
+  max-height: 800px; /* adjust based on your form's actual size */
+  padding: 1rem 0;
+  opacity: 1;
+}
