@@ -270,6 +270,8 @@ button:hover {
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-top: 3px solid #D63F09;
+  transition: opacity 0.4s ease;
+
   /* border: 1px solid red; */
 
 }
@@ -313,6 +315,23 @@ button:hover {
 }
 
 .add-club-form-container.open {
-  max-height: 200px; /* adjust as needed */
+  max-height: 200px;
   opacity: 1;
+}
+.rsvp-form-container {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+}
+
+.rsvp-form-container.open {
+  max-height: 300px; 
+  opacity: 1;
+}
+
+
+.club-box.fade-out {
+  opacity: 0;
+  pointer-events: none;
 }

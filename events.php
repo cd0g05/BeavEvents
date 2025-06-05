@@ -1,200 +1,315 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Meta and page settings -->
   <meta charset="UTF-8">
   <title>BeavEvents</title>
+
+  <!-- Link to external stylesheet -->
   <link rel="stylesheet" href="assets/style.css">
+
+  <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/InnerBgLogo.png">
-
 </head>
+
 <body>
-  
-<div class="home-wrapper">
-  <header class="home-header">
-    <img src="assets/NoBackLogo.png" alt="BeavEvents Logo" class="logo" />
-    <div class="head-col">
-      <h1 class="home-title">
-        <span style="color: #D63F09; font-size: 80px;">Beav</span>
-        <span style="color: #000000; font-size: 80px;">Events</span>
-      </h1>
-      <nav class="menu-bar">
-        <ul class="menu-list">
-          <li class="menu-item"><a href="home.php">Home</a></li>
-          <li class="menu-item"><a href="clubs.php">Clubs</a></li>
-          <li class="menu-item active"><a href="events.php">Events</a></li>
-          <li class="menu-item"><a href="tutorial.php">Help</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <!-- Wrapper for entire page content -->
+  <div class="home-wrapper">
 
-<main class="home-content">
-  <div class="body-text">
-    <strong class="sub-subheader">Create an Event: <button class="tut-btn">Add New Event</button></strong>
-    <div class="all-club-box">
-      <strong class="subheader">Upcoming Events:</strong>
+    <!-- Header section with logo and navigation menu -->
+    <header class="home-header">
+      <img src="assets/NoBackLogo.png" alt="BeavEvents Logo" class="logo" />
+      
+      <div class="head-col">
+        <!-- Main title -->
+        <h1 class="home-title">
+          <span style="color: #D63F09; font-size: 80px;">Beav</span>
+          <span style="color: #000000; font-size: 80px;">Events</span>
+        </h1>
 
-      <?php
-      ini_set('display_errors', 1);
-      ini_set('display_startup_errors', 1);
-      error_reporting(E_ALL);
+        <!-- Navigation bar -->
+        <nav class="menu-bar">
+          <ul class="menu-list">
+            <li class="menu-item"><a href="home.php">Home</a></li>
+            <li class="menu-item"><a href="clubs.php">Clubs</a></li>
+            <li class="menu-item active"><a href="events.php">Events</a></li>
+            <li class="menu-item"><a href="tutorial.php">Help</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
 
-      $link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_sextono', '0244', 'cs340_sextono');
-      if (!$link) {
-          die("Connection failed: " . mysqli_connect_error());
-      }
+    <!-- Main content section -->
+    <main class="home-content">
+      <div class="body-text">
 
-      $events_query = "SELECT * FROM EVENTS ORDER BY eventDate ASC";
-      $events_result = mysqli_query($link, $events_query);
+        <!-- Create Event Button -->
+        <strong class="sub-subheader">Create an Event: <button class="tut-btn">Add New Event</button></strong>
+        
+        <div class="all-club-box">
+          
+          <strong class="subheader">Upcoming Events:</strong>
 
-      while ($event = mysqli_fetch_assoc($events_result)) {
-          $eventID = $event['eventID'];
+          <?php
+          // Enable error reporting
 
-          // Get total RSVP count for the event
-          $total_rsvps_query = "SELECT COUNT(*) AS total FROM RSVP WHERE eventID = $eventID";
-          $total_rsvps_result = mysqli_query($link, $total_rsvps_query);
-          $total_rsvps = mysqli_fetch_assoc($total_rsvps_result)['total'];
+          ini_set('display_errors', 1);
+          ini_set('display_startup_errors', 1);
+          error_reporting(E_ALL);
 
-          echo "<div class='club-box'>";
-          echo "<div class='club-header-row'>";
-          echo "<h2>" . htmlspecialchars($event['title']) . "</h2>";
-          echo "<p><strong>Date:</strong> " . htmlspecialchars($event['eventDate']) . "</p>";
-          echo "<p><strong>Location:</strong> " . htmlspecialchars($event['location']) . "</p>";
-          echo "<p><strong>Total RSVPs:</strong> $total_rsvps</p>";
-          echo "<div class='table-button-box'>";
-          echo "<button class='table-button' type='button' onclick='toggleForm($eventID)'>Add New Club</button>";
-          echo "<button class='table-button'>RSVP</button>";
-          echo "<button class='table-button'>Delete Event</button>";
-          echo "</div>";
-          echo "</div>";
-
-          // Clubs registered to the event
-          $clubs_query = "
-              SELECT 
-                  c.clubID, c.name, c.advisor,
-                  COUNT(r.userID) AS club_rsvp_count
-              FROM EVENTCLUBS ec
-              JOIN CLUB c ON ec.clubID = c.clubID
-              LEFT JOIN MEMBERSHIP m ON c.clubID = m.clubID
-              LEFT JOIN RSVP r ON r.userID = m.userID AND r.eventID = ec.eventID
-              WHERE ec.eventID = $eventID
-              GROUP BY c.clubID
-          ";
-          $clubs_result = mysqli_query($link, $clubs_query);
-
-          echo "<table style='width: 100%; border-collapse: collapse;'>";
-          echo "<thead class='club-headers'>
-              <tr>
-                  <th>Club</th>
-                  <th>Advisor</th>
-                  <th>Club ID</th>
-                  <th>#RSVPs</th>
-                  <th> </th>
-              </tr>
-          </thead>
-          <tbody>";
-
-          while ($club = mysqli_fetch_assoc($clubs_result)) {
-              echo "<tr>";
-              echo "<td>" . htmlspecialchars($club['name']) . "</td>";
-              echo "<td>" . htmlspecialchars($club['advisor']) . "</td>";
-              echo "<td>" . htmlspecialchars($club['clubID']) . "</td>";
-              echo "<td>" . htmlspecialchars($club['club_rsvp_count']) . "</td>";
-
-              // Add Delete Club form
-              echo "<td>";
-              echo "<form action='removeclubfromevent.php' method='POST';'>";
-              echo "<input type='hidden' name='eventID' value='" . htmlspecialchars($eventID) . "'>";
-              echo "<input type='hidden' name='clubID' value='" . htmlspecialchars($club['clubID']) . "'>";
-              echo "<button type='submit' class='small-table-button'>Remove</button>";
-              echo "</form>";
-              echo "</td>";
-
-              echo "</tr>";
+          // Connect to MySQL database
+          $link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_sextono', '0244', 'cs340_sextono');
+          if (!$link) {
+              die("Connection failed: " . mysqli_connect_error());
           }
 
-          echo "</tbody></table>";
+          // Query to get all events sorted by date
+          $events_query = "SELECT * FROM EVENTS ORDER BY eventDate ASC";
+          $events_result = mysqli_query($link, $events_query);
 
-          // Add Club Form (moved outside the club loop)
-          $available_clubs_query = "
-              SELECT clubID, name
-              FROM CLUB
-              WHERE clubID NOT IN (
-                  SELECT clubID FROM EVENTCLUBS WHERE eventID = $eventID
-              )
-          ";
-          $available_clubs_result = mysqli_query($link, $available_clubs_query);
+          // Loop through each event
+          while ($event = mysqli_fetch_assoc($events_result)) {
+              $eventID = $event['eventID'];
 
-          if (!$available_clubs_result) {
-              echo "<p>SQL Error: " . mysqli_error($link) . "</p>";
-          } else if (mysqli_num_rows($available_clubs_result) > 0) {
-            echo "<div id='add-club-form-$eventID' class='add-club-form-container'>";
-            echo "<form action='addclubtoevent.php' method='POST'>";              echo "<input type='hidden' name='eventID' value='" . htmlspecialchars($eventID) . "'>";
-              echo "<label for='clubID-$eventID'><strong>Add Club to Event:</strong></label> ";
-              echo "<select name='clubID' id='clubID-$eventID'>";
-              while ($club_option = mysqli_fetch_assoc($available_clubs_result)) {
-                  echo "<option value='" . htmlspecialchars($club_option['clubID']) . "'>" . htmlspecialchars($club_option['name']) . "</option>";
-              }
-              echo "</select> ";
-              echo "<button type='submit' class='table-button'>Add</button>";
-              echo "</form>";
+              // Query to get total number of RSVPs for this event
+              $total_rsvps_query = "SELECT COUNT(*) AS total FROM RSVP WHERE eventID = $eventID";
+              $total_rsvps_result = mysqli_query($link, $total_rsvps_query);
+              $total_rsvps = mysqli_fetch_assoc($total_rsvps_result)['total'];
+
+              // Display event details
+              echo "<div id='event-box-$eventID' class='club-box'>";
+
+              echo "<div class='club-header-row'>";
+              echo "<h2>" . htmlspecialchars($event['title']) . "</h2>";
+              echo "<p><strong>Date:</strong> " . htmlspecialchars($event['eventDate']) . "</p>";
+              echo "<p><strong>Location:</strong> " . htmlspecialchars($event['location']) . "</p>";
+              echo "<p><strong>Total RSVPs:</strong> $total_rsvps</p>";
+
+              // Event action buttons
+              echo "<div class='table-button-box'>";
+              echo "<button class='table-button' type='button' onclick='toggleForm($eventID)'>Add New Club</button>";
+              echo "<button class='table-button' type='button' onclick='toggleRSVPForm($eventID)'>RSVP</button>";
+              
+
+              echo "<button type='button' class='table-button' onclick='deleteEvent(event, $eventID)'>Delete Event</button>";
+
               echo "</div>";
+              echo "</div>";
+
+              // Query clubs attending this event and their RSVP count
+              $clubs_query = "
+                  SELECT 
+                      c.clubID, c.name, c.advisor,
+                      COUNT(r.userID) AS club_rsvp_count
+                  FROM EVENTCLUBS ec
+                  JOIN CLUB c ON ec.clubID = c.clubID
+                  LEFT JOIN MEMBERSHIP m ON c.clubID = m.clubID
+                  LEFT JOIN RSVP r ON r.userID = m.userID AND r.eventID = ec.eventID
+                  WHERE ec.eventID = $eventID
+                  GROUP BY c.clubID
+              ";
+              $clubs_result = mysqli_query($link, $clubs_query);
+
+              // Display clubs table
+              echo "<table style='width: 100%; border-collapse: collapse;'>";
+              echo "<thead class='club-headers'>
+                        <tr>
+                          <th>Club</th>
+                          <th>Advisor</th>
+                          <th>Club ID</th>
+                          <th>#RSVPs</th>
+                          <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>";
+
+              // Loop through clubs for this event
+              while ($club = mysqli_fetch_assoc($clubs_result)) {
+                  echo "<tr>";
+                  echo "<td>" . htmlspecialchars($club['name']) . "</td>";
+                  echo "<td>" . htmlspecialchars($club['advisor']) . "</td>";
+                  echo "<td>" . htmlspecialchars($club['clubID']) . "</td>";
+                  echo "<td>" . htmlspecialchars($club['club_rsvp_count']) . "</td>";
+
+                  // Form to remove club from event
+                  echo "<td>";
+                  echo "<form action='removeclubfromevent.php' method='POST';'>";
+                  echo "<input type='hidden' name='eventID' value='" . htmlspecialchars($eventID) . "'>";
+                  echo "<input type='hidden' name='clubID' value='" . htmlspecialchars($club['clubID']) . "'>";
+                  echo "<button type='submit' class='small-table-button'>Remove</button>";
+                  echo "</form>";
+                  echo "</td>";
+                  echo "</tr>";
+              }
+
+              echo "</tbody></table>";
+
+              // Query available clubs not already added to this event
+              $available_clubs_query = "
+                  SELECT clubID, name
+                  FROM CLUB
+                  WHERE clubID NOT IN (
+                      SELECT clubID FROM EVENTCLUBS WHERE eventID = $eventID
+                  )
+              ";
+              $available_clubs_result = mysqli_query($link, $available_clubs_query);
+
+              // If available clubs found, display form to add them
+              if (!$available_clubs_result) {
+                  echo "<p>SQL Error: " . mysqli_error($link) . "</p>";
+              } else if (mysqli_num_rows($available_clubs_result) > 0) {
+                  echo "<div id='add-club-form-$eventID' class='add-club-form-container'>";
+                  echo "<form action='addclubtoevent.php' method='POST'>";
+                  echo "<input type='hidden' name='eventID' value='" . htmlspecialchars($eventID) . "'>";
+                  echo "<label for='clubID-$eventID'><strong>Add Club to Event:</strong></label> ";
+                  echo "<select name='clubID' id='clubID-$eventID'>";
+
+                  // Dropdown menu for selecting a club
+                  while ($club_option = mysqli_fetch_assoc($available_clubs_result)) {
+                      echo "<option value='" . htmlspecialchars($club_option['clubID']) . "'>" . htmlspecialchars($club_option['name']) . "</option>";
+                  }
+
+                  echo "</select> ";
+                  echo "<button type='submit' class='table-button'>Add</button>";
+                  echo "</form>";
+                  echo "</div>";
+              }
+              // SQL Query returns all userid and names of users within the clubs attatched to the event
+              $club_users_query = "
+                  SELECT DISTINCT u.userID, u.name
+                  FROM EVENTCLUBS ec
+                  JOIN MEMBERSHIP m ON ec.clubID = m.clubID
+                  JOIN USERS u ON u.userID = m.userID
+                  WHERE ec.eventID = $eventID
+              ";
+              // stores names and ids from the above query into club_users_result
+              $club_users_result = mysqli_query($link, $club_users_query);
+              // echo "<p>RSVP query returned " . mysqli_num_rows($club_users_result) . " users for event $eventID</p>";
+
+              // verifies that query worked
+              if (!$club_users_result) {
+                echo "<p>SQL Error: " . mysqli_error($link) . "</p>";
+              } else {
+                echo "<div id='rsvp-form-$eventID' class='rsvp-form-container'>";
+                echo "<form action='rsvptoevent.php' method='POST'>";
+                echo "<input type='hidden' name='eventID' value='" . htmlspecialchars($eventID) . "'>";
+                echo "<label for='userID-$eventID'><strong>RSVP to Event:</strong></label> ";
+                echo "<select name='userID' id='userID-$eventID'>";
+            
+                if (mysqli_num_rows($club_users_result) === 0) {
+                  echo "<option disabled selected>No users available</option>";
+                  $disable_rsvp_button = true;
+                } else {
+                    $disable_rsvp_button = false;
+                    while ($rsvp_option = mysqli_fetch_assoc($club_users_result)) {
+                        echo "<option value='" . htmlspecialchars($rsvp_option['userID']) . "'>" . htmlspecialchars($rsvp_option['name']) . "</option>";
+                    }
+                }
+            
+                echo "</select> ";
+                echo "<button type='submit' class='table-button' " . ($disable_rsvp_button ? "disabled" : "") . ">Submit RSVP</button>";
+                echo "</form>";
+                echo "</div>";
+              }
+
+
+              echo "</div>"; // End of .club-box
           }
 
-          echo "</div>"; // end .club-box
+          // Close database connection
+          mysqli_close($link);
+          ?>
+        </div>
+      </div>   
+    </main>
+
+    <!-- Footer content with contact and attribution -->
+    <footer class="footer">
+      <div class="footer-main">
+        <div class="footer-column">
+          <h4>Authors</h4>
+          <p>Website by Carter Cripe, Owen Sexton</p>
+          <p>Phone: (970) 581-8720</p>
+        </div>
+        <div class="footer-column">
+          <h4>Contact</h4>
+          <p>Carter's Email: cripeca@oregonstate.edu</p>
+          <p>Owen's Email: sextono@oregonstate.edu</p>
+        </div>
+        <div class="footer-column">
+          <h4>Social</h4>
+          <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">Instagram</a>
+          <a href="https://x.com/carter_cripe" target="_blank"><p>Twitter</p></a>
+        </div>
+        <div class="footer-column">
+          <h4>Image credit</h4>
+          <p>BeavEvents Logo created by DALL-e</p>
+        </div>
+      </div>
+
+      <div class="footer-bar">
+        <p>© 2025 BeavEvents — All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- JavaScript for toggling the add club form visibility -->
+  <script>
+    function toggleForm(eventID) {
+      const formDiv = document.getElementById('add-club-form-' + eventID);
+      if (formDiv.style.display === 'none') {
+        formDiv.style.display = 'block';
+      } else {
+        formDiv.style.display = 'none';
       }
-
-      mysqli_close($link);
-      ?>
-    </div>
-  </div>   
-</main>
-
-
-  <footer class="footer">
-    <div class="footer-main">
-      <div class="footer-column">
-        <h4>Authors</h4>
-        <p>Website by Carter Cripe, Owen Sexton</p>
-        <p>Phone: (970) 581-8720</p>
-      </div>
-      <div class="footer-column">
-        <h4>Contact</h4>
-        <p>Carter's Email: cripeca@oregonstate.edu</p>
-        <p>Owen's Email: sextono@oregonstate.edu</p>
-      </div>
-      <div class="footer-column">
-        <h4>Social</h4>
-        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">Instagram</a>
-        <a href="https://x.com/carter_cripe" target="_blank"><p>Twitter</p></a>
-      </div>
-      <div class="footer-column">
-        <h4>Image credit</h4>
-        <p>BeavEvents Logo created by DALL-e</p>
-      </div>
-    </div>
-    <div class="footer-bar">
-      <p>© 2025 BeavEvents — All rights reserved.</p>
-    </div>
-  </footer>
-</div>
-<script>
-  function toggleForm(eventID) {
-    const formDiv = document.getElementById('add-club-form-' + eventID);
-    if (formDiv.style.display === 'none') {
-      formDiv.style.display = 'block';
-    } else {
-      formDiv.style.display = 'none';
     }
-  }
-</script>
-<script>
-function toggleForm(eventID) {
-  const formDiv = document.getElementById('add-club-form-' + eventID);
-  formDiv.classList.toggle('open');
-}
-</script>
+  </script>
+
+  <!-- Alternate toggle function using class toggling -->
+  <script>
+    function toggleForm(eventID) {
+      const formDiv = document.getElementById('add-club-form-' + eventID);
+      formDiv.classList.toggle('open');
+    }
+  </script>
+
+  <script>
+    function toggleRSVPForm(eventID) {
+      const formDiv = document.getElementById('rsvp-form-' + eventID);
+      if (formDiv) {
+        formDiv.classList.toggle('open');
+      } else {
+        console.log("Couldn't find RSVP form for event:", eventID);
+      }
+    }
+  </script>
+  <script>
+    function deleteEvent(e, eventID) {
+      e.preventDefault();
+      fetch('deleteevent.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `eventID=${eventID}`
+      })
+      .then(response => {
+        if (response.ok) {
+          const box = document.getElementById(`event-box-${eventID}`);
+          if (box) {
+            box.classList.add('fade-out');
+            setTimeout(() => box.remove(), 400);
+          }
+        } else {
+          return response.text().then(text => { throw new Error(text); });
+        }
+      })
+      .catch(err => {
+        alert("Failed to delete event: " + err.message);
+      });
+    }
+
+    </script>
+
 </body>
 </html>
