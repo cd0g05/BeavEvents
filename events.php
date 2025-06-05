@@ -146,7 +146,7 @@
 
               // Loop through clubs for this event
               while ($club = mysqli_fetch_assoc($clubs_result)) {
-                  echo "<tr>";
+                  echo "<tr id='club-row-{$eventID}-{$club['clubID']}'> ";
                   echo "<td>" . htmlspecialchars($club['name']) . "</td>";
                   echo "<td>" . htmlspecialchars($club['advisor']) . "</td>";
                   echo "<td>" . htmlspecialchars($club['clubID']) . "</td>";
@@ -154,9 +154,7 @@
 
                   // Form to remove club from event
                   echo "<td>";
-                  echo "<form action='removeclubfromevent.php' method='POST';'>";
-                  echo "<input type='hidden' name='eventID' value='" . htmlspecialchars($eventID) . "'>";
-                  echo "<input type='hidden' name='clubID' value='" . htmlspecialchars($club['clubID']) . "'>";
+                  echo "<form onsubmit='removeClub(event, {$eventID}, {$club['clubID']})' class='remove-club-form'>";
                   echo "<button type='submit' class='small-table-button'>Remove</button>";
                   echo "</form>";
                   echo "</td>";
@@ -338,5 +336,31 @@
         form.classList.toggle('open');
       }
     </script>
+    <script>
+    function removeClub(e, eventID, clubID) {
+      e.preventDefault();
+
+      fetch('removeclubfromevent.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `eventID=${eventID}&clubID=${clubID}`
+      })
+      .then(response => {
+        if (response.ok) {
+          const row = document.getElementById(`club-row-${eventID}-${clubID}`);
+          if (row) {
+            row.classList.add('fade-out');
+            setTimeout(() => row.remove(), 200);
+          }
+        } else {
+          return response.text().then(text => { throw new Error(text); });
+        }
+      })
+      .catch(err => {
+        alert("Failed to remove club: " + err.message);
+      });
+    }
+  </script>
+
 </body>
 </html>
