@@ -29,8 +29,27 @@
 
   <div class="home-content">
     <div class="body-text">
-      <strong class="sub-subheader">Create a Club: <button class="tut-btn">Add New Club</button></strong>
+    <div class="create-event">
+        <!-- Create Event Button -->
+          <strong class="sub-subheader">Create a Club: <button class="tut-btn" onclick="toggleEventForm()">Add New Club</button></strong>
+          <div id="add-event-form-container">
+            <form action="addclub.php" method="POST" class="event-form">
+              <label>
+                Club Name: <input type="text" name="clubTitle" required>
+              </label><br>
+              <label>
+                Club Advisor: <input type="text" name="clubAdvisor" required>
+              </label><br>
+              <label>
+                Club Category: <input type="text" name="clubCategory" required>
+              </label><br>
+              
+              <button type="submit" class="tut-btn">Submit Club</button>
+            </form>
+          </div>
 
+        </div>
+        <div class="all-club-box">
         <?php
         $link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_sextono', '0244', 'cs340_sextono');
 
@@ -40,65 +59,85 @@
 
         $query = "SELECT * FROM CLUB";
         $result = mysqli_query($link, $query) or die(mysqli_error($link));
+        while ($club = mysqli_fetch_assoc($result)) {
+            $clubID = $club['clubID'];
 
-        echo "<table border='1'>
-        <tr>
-            <th>Name</th>
-            <th>Advisor</th>
-            <th>Category</th>
-            <th>clubID</th>
-        </tr>";
+            // Query to get total number of RSVPs for this event
+            
 
-        while ($row = mysqli_fetch_assoc($result)) {
-            echo "<tr>";
-            echo "<td>".$row['name']."</td>";
-            echo "<td>".$row['advisor']."</td>";    
-            echo "<td>".$row['category']."</td>";
-            echo "<td>".$row['clubID']."</td>";
-            echo "</tr>";
+            // Display event details
+            echo "<div id='event-box-$clubID' class='club-box'>";
+
+            echo "<div class='club-header-row'>";
+            echo "<h2>" . htmlspecialchars($club['name']) . "</h2>";
+            echo "<p><strong>Advisor:</strong> " . htmlspecialchars($club['advisor']) . "</p>";
+            echo "<p><strong>Category:</strong> " . htmlspecialchars($club['category']) . "</p>";
+
+            // Event action buttons
+            echo "<div class='table-button-box'>";
+            echo "<button class='table-button' type='button' onclick='toggleForm($clubID)'>Add New Club</button>";
+            echo "<button class='table-button' type='button' onclick='toggleRSVPForm($clubID)'>RSVP</button>";
+            
+
+            echo "<button type='button' class='table-button' onclick='deleteEvent(event, $clubID)'>Delete Event</button>";
+
+            echo "</div>";
+            echo "</div>";
+
+            
+
+            // Display clubs table
+            echo "<table style='width: 100%; border-collapse: collapse;'>";
+            echo "<thead class='club-headers'>
+                      <tr>
+                        <th>Club Member</th>
+                        <th>Role</th>
+                        <th>Email</th>
+                        <th>UserID</th>
+                        <th> </th>
+                      </tr>
+                  </thead>
+                  <tbody>";
+            
+            $club_users_query = "
+              SELECT u.*
+              FROM USERS u
+              JOIN MEMBERSHIP m ON u.userID = m.userID
+              WHERE m.clubID = $clubID";
+            
+            $club_users_result = mysqli_query($link, $club_users_query);
+
+            while ($user = mysqli_fetch_assoc($club_users_result)) {
+              echo "<tr id='club-row-{$clubID}-{$user['userID']}'>";
+              echo "<td>" . htmlspecialchars($user['name']) . "</td>";
+              echo "<td>" . htmlspecialchars($user['role']) . "</td>";
+              echo "<td>" . htmlspecialchars($user['email']) . "</td>";
+              echo "<td>" . htmlspecialchars($user['userID']) . "</td>";
+
+              // Form to remove club from event
+              echo "<td>";
+              echo "<form onsubmit='removeUser(event, {$clubID}, {$user['userID']})' class='remove-club-form'>";
+              echo "<button type='submit' class='small-table-button'>Remove</button>";
+              echo "</form>";
+              echo "</td>";
+              echo "</tr>";
+            }
+
+
+
+            echo "</tbody></table>";
+
+            // Query available clubs not already added to this event
+            
+
+
+            echo "</div>"; // End of .club-box
         }
 
-        echo "</table>";
-
-
+        // Close database connection
         mysqli_close($link);
         ?>
-      
-      <div class="all-club-box">
-        <?php foreach ($clubs as $club): ?>
-          <div class="club-box">
-            <div class="club-header-row">
-              <h2><?= htmlspecialchars($club['name']) ?></h2>
-              <div class="table-button-box">
-                <button class="table-button">Add new Member</button>
-                <button class="table-button">Delete Club</button>
-              </div>
-            </div>
-            <table style="width: 100%; border-collapse: collapse;">
-              <thead class="club-headers">
-                <tr>
-                  <th>Name</th>
-                  <th>Role</th>
-                  <th>Email</th>
-                  <th>ID</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php foreach ($club['members'] as $member): ?>
-                  <tr>
-                    <td><?= htmlspecialchars($member['name']) ?></td>
-                    <td><?= htmlspecialchars($member['role']) ?></td>
-                    <td><?= htmlspecialchars($member['email']) ?></td>
-                    <td><?= htmlspecialchars($member['user_id']) ?></td>
-                  </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
-          </div>
-        <?php endforeach; ?>
       </div>
-    </div>
-  </div>
 
   <footer class="footer">
     <div class="footer-main">
@@ -128,5 +167,36 @@
   </footer>
 </div>
 
+  <script>
+    function removeUser(e, clubID, userID) {
+      e.preventDefault();
+
+      fetch('removeuserfromclub.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `clubID=${clubID}&userID=${userID}`
+      })
+      .then(response => {
+        if (response.ok) {
+          const row = document.getElementById(`club-row-${clubID}-${userID}`);
+          if (row) {
+            row.classList.add('fade-out');
+            setTimeout(() => row.remove(), 200);
+          }
+        } else {
+          return response.text().then(text => { throw new Error(text); });
+        }
+      })
+      .catch(err => {
+        alert("Failed to remove club: " + err.message);
+      });
+    }
+  </script>
+  <script>
+      function toggleEventForm() {
+        const form = document.getElementById('add-event-form-container');
+        form.classList.toggle('open');
+      }
+    </script>
 </body>
 </html>
