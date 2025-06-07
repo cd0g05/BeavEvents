@@ -1,7 +1,7 @@
 <?php
 // Establish a connection to the MySQL database.
 // Arguments: hostname, username, password, database name.
-$link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_sextono', '0244', 'cs340_sextono');
+$link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_cripeca', '5036', 'cs340_cripeca');
 
 
 // Check if the connection was successful.
@@ -34,7 +34,7 @@ if ($eventID > 0 && $userID > 0) {
 
 } else {
     // If one or both IDs are invalid, show an error message.
-    echo "Invalid event or user ID.";
+    echo "Invalid event or user ID. $eventID + $userID";
 }
 
 // Close the database connection to free up resources.

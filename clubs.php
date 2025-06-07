@@ -51,7 +51,7 @@
         </div>
         <div class="all-club-box">
         <?php
-        $link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_sextono', '0244', 'cs340_sextono');
+        $link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_cripeca', '5036', 'cs340_cripeca');
 
         if (!$link) {
             die("Connection failed: " . mysqli_connect_error());

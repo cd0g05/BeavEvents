@@ -1,7 +1,7 @@
 <?php
 // Establish a connection to the MySQL database.
 // Parameters: hostname, username, password, database name.
-$link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_sextono', '0244', 'cs340_sextono');
+$link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_cripeca', '5036', 'cs340_cripeca');
 
 // Check if the connection was successful.
 // If not, stop the script and display the error message.

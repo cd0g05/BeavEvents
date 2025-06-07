@@ -79,7 +79,7 @@
           error_reporting(E_ALL);
 
           // Connect to MySQL database
-          $link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_sextono', '0244', 'cs340_sextono');
+          $link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_cripeca', '5036', 'cs340_cripeca');
           if (!$link) {
               die("Connection failed: " . mysqli_connect_error());
           }
@@ -339,7 +339,7 @@
     <script>
     function removeClub(e, eventID, clubID) {
       e.preventDefault();
-
+      console.log("Doing remove club animation")
       fetch('removeclubfromevent.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

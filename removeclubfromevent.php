@@ -1,13 +1,17 @@
 <?php
 // Establish a connection to the MySQL database.
 // Parameters: hostname, username, password, database name.
-$link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_sextono', '0244', 'cs340_sextono');
+$link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_cripeca', '5036', 'cs340_cripeca');
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 
 // Check if the connection was successful.
 // If not, stop the script and display the error message.
 if (!$link) {
     die("Connection failed: " . mysqli_connect_error());
 }
+
+error_log("POST: " . print_r($_POST, true));
 
 // Retrieve and sanitize input from the form submitted via POST.
 // intval() ensures the inputs are treated as integers (helps prevent SQL injection).
@@ -18,6 +22,8 @@ $clubID = intval($_POST['clubID']);
 if ($eventID > 0 && $clubID > 0) {
 
     // Prepare the SQL DELETE query to remove the association between the club and the event.
+    error_log("DELETE FROM Clubs WHERE clubID = $clubID");
+
     $delete_query = "DELETE FROM EVENTCLUBS WHERE eventID = $eventID AND clubID = $clubID";
 
     // Attempt to execute the DELETE query.
