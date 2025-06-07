@@ -13,28 +13,28 @@ if (!$link) {
 // Get the event ID and club ID from the POST request sent by a form.
 // Use intval() to ensure the values are integers, which prevents SQL injection.
 $eventID = intval($_POST['eventID']);
-$clubID = intval($_POST['clubID']);
+$userID = intval($_POST['userID']);
 
 // Proceed only if both IDs are valid integers greater than 0
-if ($eventID >= 0 && $clubID >= 0) {
+if ($eventID > 0 && $userID > 0) {
     
     // Prepare an SQL query to insert a new row into the EVENTCLUBS table,
     // effectively linking the selected club to the selected event.
-    $insert_query = "INSERT INTO EVENTCLUBS (eventID, clubID) VALUES ($eventID, $clubID)";
+    $insert_query = "INSERT INTO RSVP (eventID, userID, time) VALUES ($eventID, $userID, NOW())";
 
     // Execute the query.
     if (mysqli_query($link, $insert_query)) {
         // If insertion is successful, redirect the user back to the Events page.
-        header("Location: events.php");
+        header("Location: ../events.php");
         exit;
     } else {
         // If the query fails, output the error for debugging.
-        echo "Error adding club to event: " . mysqli_error($link);
+        echo "Error adding rsvp to event: " . mysqli_error($link);
     }
 
 } else {
     // If one or both IDs are invalid, show an error message.
-    echo "Invalid event or club ID. $eventID + $clubID";
+    echo "Invalid event or user ID. $eventID + $userID";
 }
 
 // Close the database connection to free up resources.

@@ -31,7 +31,7 @@ if ($eventID > 0) {
     $delete_event_query = "DELETE FROM EVENTS WHERE eventID = $eventID";
 
     if (mysqli_query($link, $delete_event_query)) {
-        header("Location: events.php");
+        header("Location: ../events.php");
         exit;
     } else {
         echo "Error deleting event: " . mysqli_error($link);

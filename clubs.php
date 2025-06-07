@@ -33,7 +33,7 @@
         <!-- Create Event Button -->
           <strong class="sub-subheader">Create a Club: <button class="tut-btn" onclick="toggleEventForm()">Add New Club</button></strong>
           <div id="add-event-form-container">
-            <form action="addclub.php" method="POST" class="event-form">
+            <form action="backend/addclub.php" method="POST" class="event-form">
               <label>
                 Club Name: <input type="text" name="clubTitle" required>
               </label><br>
@@ -171,7 +171,7 @@
     function removeUser(e, clubID, userID) {
       e.preventDefault();
 
-      fetch('removeuserfromclub.php', {
+      fetch('backend/removeuserfromclub.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: `clubID=${clubID}&userID=${userID}`

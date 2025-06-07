@@ -15,15 +15,14 @@ if (!$link) {
 
 // Get the event ID and club ID from the POST request sent by a form.
 // Use intval() to ensure the values are integers, which prevents SQL injection.
-$title = mysqli_real_escape_string($link, $_POST['eventTitle']);
-$date = $_POST['eventDate'];
-$time = $_POST['eventTime'];
-$desc = mysqli_real_escape_string($link, $_POST['eventDescription']);
-$loc = mysqli_real_escape_string($link, $_POST['eventLocation']);
+$title = mysqli_real_escape_string($link, $_POST['clubTitle']);
+$advis = mysqli_real_escape_string($link, $_POST['clubAdvisor']);
+$cat = mysqli_real_escape_string($link, $_POST['clubCategory']);
 
-$query = "INSERT INTO EVENTS (title, description, eventDate, time, location) VALUES ('$title', '$desc', '$date', '$time', '$loc')";
+
+$query = "INSERT INTO CLUB (name, advisor, category) VALUES ('$title', '$advis', '$cat')";
 if (mysqli_query($link, $query)) {
-    header("Location: events.php");
+    header("Location: ../clubs.php");
     exit;
 } else {
     echo "Error: " . mysqli_error($link);

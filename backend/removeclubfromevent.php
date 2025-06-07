@@ -2,6 +2,8 @@
 // Establish a connection to the MySQL database.
 // Parameters: hostname, username, password, database name.
 $link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_cripeca', '5036', 'cs340_cripeca');
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 
 // Check if the connection was successful.
 // If not, stop the script and display the error message.
@@ -9,25 +11,29 @@ if (!$link) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
+error_log("POST: " . print_r($_POST, true));
+
 // Retrieve and sanitize input from the form submitted via POST.
 // intval() ensures the inputs are treated as integers (helps prevent SQL injection).
+$eventID = intval($_POST['eventID']);
 $clubID = intval($_POST['clubID']);
-$userID = intval($_POST['userID']);
 
 // Proceed only if both values are valid integers greater than 0.
-if ($clubID > 0 && $userID > 0) {
+if ($eventID > 0 && $clubID > 0) {
 
     // Prepare the SQL DELETE query to remove the association between the club and the event.
-    $delete_query = "DELETE FROM MEMBERSHIP WHERE clubID = $clubID AND userID = $userID";
+    error_log("DELETE FROM Clubs WHERE clubID = $clubID");
+
+    $delete_query = "DELETE FROM EVENTCLUBS WHERE eventID = $eventID AND clubID = $clubID";
 
     // Attempt to execute the DELETE query.
     if (mysqli_query($link, $delete_query)) {
         // If the query succeeds, redirect the user back to the events page.
-        header("Location: clubs.php");
+        header("Location: ../events.php");
         exit;
     } else {
         // If there's an error during the query, display the error message.
-        echo "Error removing user: " . mysqli_error($link);
+        echo "Error removing club: " . mysqli_error($link);
     }
 
 } else {

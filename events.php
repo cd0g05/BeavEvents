@@ -46,7 +46,7 @@
         <!-- Create Event Button -->
           <strong class="sub-subheader">Create an Event: <button class="tut-btn" onclick="toggleEventForm()">Add New Event</button></strong>
           <div id="add-event-form-container">
-            <form action="addevent.php" method="POST" class="event-form">
+            <form action="backenc/addevent.php" method="POST" class="event-form">
               <label>
                 Event Name: <input type="text" name="eventTitle" required>
               </label><br>
@@ -112,7 +112,7 @@
               echo "<button class='table-button' type='button' onclick='toggleRSVPForm($eventID)'>RSVP</button>";
               
 
-              echo "<button type='button' class='table-button' onclick='deleteEvent(event, $eventID)'>Delete Event</button>";
+              echo "<button type='button' class='table-button' onclick='backend/deleteEvent(event, $eventID)'>Delete Event</button>";
 
               echo "</div>";
               echo "</div>";
@@ -178,7 +178,7 @@
                   echo "<p>SQL Error: " . mysqli_error($link) . "</p>";
               } else if (mysqli_num_rows($available_clubs_result) > 0) {
                   echo "<div id='add-club-form-$eventID' class='add-club-form-container'>";
-                  echo "<form action='addclubtoevent.php' method='POST'>";
+                  echo "<form action='backend/addclubtoevent.php' method='POST'>";
                   echo "<input type='hidden' name='eventID' value='" . htmlspecialchars($eventID) . "'>";
                   echo "<label for='clubID-$eventID'><strong>Add Club to Event:</strong></label> ";
                   echo "<select name='clubID' id='clubID-$eventID'>";
@@ -210,7 +210,7 @@
                 echo "<p>SQL Error: " . mysqli_error($link) . "</p>";
               } else {
                 echo "<div id='rsvp-form-$eventID' class='rsvp-form-container'>";
-                echo "<form action='rsvptoevent.php' method='POST'>";
+                echo "<form action='backend/rsvptoevent.php' method='POST'>";
                 echo "<input type='hidden' name='eventID' value='" . htmlspecialchars($eventID) . "'>";
                 echo "<label for='userID-$eventID'><strong>RSVP to Event:</strong></label> ";
                 echo "<select name='userID' id='userID-$eventID'>";
@@ -340,7 +340,7 @@
     function removeClub(e, eventID, clubID) {
       e.preventDefault();
       console.log("Doing remove club animation")
-      fetch('removeclubfromevent.php', {
+      fetch('backend/removeclubfromevent.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: `eventID=${eventID}&clubID=${clubID}`
