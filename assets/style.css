@@ -379,3 +379,32 @@ button:hover {
   opacity: 0;
   transition: opacity 0.4s ease;
 }
+
+.user-form {
+  background-color: #FFFFFF;
+  margin: 20px 0;
+  padding: 10px;
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  border-top: 3px solid #D63F09;
+  transition: max-height 0.4s ease, padding 0.3s ease, opacity 0.4s ease;
+  width: 95%;
+  gap: 0.5rem;
+
+  /* display: none; */
+}
+.user-form input {
+  margin: 0.5rem 0;
+  padding: 0.4rem;
+  width: 75%;
+  max-width: 200px;
+}
+
+.user-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.user-form button {
+  margin-top: 0.5rem;
+}
+

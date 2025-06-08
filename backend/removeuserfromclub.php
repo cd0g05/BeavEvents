@@ -15,7 +15,7 @@ $clubID = intval($_POST['clubID']);
 $userID = intval($_POST['userID']);
 
 // Proceed only if both values are valid integers greater than 0.
-if ($clubID > 0 && $userID > 0) {
+if ($clubID >= 0 && $userID >= 0) {
 
     // Prepare the SQL DELETE query to remove the association between the club and the event.
     $delete_query = "DELETE FROM MEMBERSHIP WHERE clubID = $clubID AND userID = $userID";

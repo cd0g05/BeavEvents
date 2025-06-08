@@ -1,6 +1,9 @@
 <?php
 // Establish a connection to the MySQL database.
 // Arguments: hostname, username, password, database name.
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 $link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_cripeca', '5036', 'cs340_cripeca');
 
 
@@ -16,7 +19,7 @@ $eventID = intval($_POST['eventID']);
 $userID = intval($_POST['userID']);
 
 // Proceed only if both IDs are valid integers greater than 0
-if ($eventID > 0 && $userID > 0) {
+if ($eventID >= 0 && $userID >= 0) {
     
     // Prepare an SQL query to insert a new row into the EVENTCLUBS table,
     // effectively linking the selected club to the selected event.

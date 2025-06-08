@@ -46,7 +46,7 @@
         <!-- Create Event Button -->
           <strong class="sub-subheader">Create an Event: <button class="tut-btn" onclick="toggleEventForm()">Add New Event</button></strong>
           <div id="add-event-form-container">
-            <form action="backenc/addevent.php" method="POST" class="event-form">
+            <form action="backend/addevent.php" method="POST" class="event-form">
               <label>
                 Event Name: <input type="text" name="eventTitle" required>
               </label><br>
@@ -112,7 +112,7 @@
               echo "<button class='table-button' type='button' onclick='toggleRSVPForm($eventID)'>RSVP</button>";
               
 
-              echo "<button type='button' class='table-button' onclick='backend/deleteEvent(event, $eventID)'>Delete Event</button>";
+              echo "<button type='button' class='table-button' onclick='deleteEvent(event, $eventID)'>Delete Event</button>";
 
               echo "</div>";
               echo "</div>";
@@ -195,11 +195,13 @@
               }
               // SQL Query returns all userid and names of users within the clubs attatched to the event
               $club_users_query = "
-                  SELECT DISTINCT u.userID, u.name
-                  FROM EVENTCLUBS ec
-                  JOIN MEMBERSHIP m ON ec.clubID = m.clubID
-                  JOIN USERS u ON u.userID = m.userID
-                  WHERE ec.eventID = $eventID
+                SELECT DISTINCT u.userID, u.name
+                FROM EVENTCLUBS ec
+                JOIN MEMBERSHIP m ON ec.clubID = m.clubID
+                JOIN USERS u ON u.userID = m.userID
+                LEFT JOIN RSVP r ON u.userID = r.userID AND r.eventID = $eventID
+                WHERE ec.eventID = $eventID
+                AND r.userID IS NULL
               ";
               // stores names and ids from the above query into club_users_result
               $club_users_result = mysqli_query($link, $club_users_query);
@@ -305,7 +307,7 @@
   <script>
     function deleteEvent(e, eventID) {
       e.preventDefault();
-      fetch('deleteevent.php', {
+      fetch('backend/deleteevent.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

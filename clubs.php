@@ -75,11 +75,14 @@
 
             // Event action buttons
             echo "<div class='table-button-box'>";
-            echo "<button class='table-button' type='button' onclick='toggleForm($clubID)'>Add New Club</button>";
-            echo "<button class='table-button' type='button' onclick='toggleRSVPForm($clubID)'>RSVP</button>";
+            echo "<button class='table-button' type='button' onclick='toggleUserForm($clubID)'>Add New User</button>";
+            // echo "</div>"; // closes table-button-box
+            
+               
+            // echo "<button class='table-button' type='button' onclick='toggleRSVPForm($clubID)'>RSVP</button>";
             
 
-            echo "<button type='button' class='table-button' onclick='deleteEvent(event, $clubID)'>Delete Event</button>";
+            echo "<button type='button' class='table-button' onclick='deleteClub(event, $clubID)'>Delete Club</button>";
 
             echo "</div>";
             echo "</div>";
@@ -98,7 +101,15 @@
                       </tr>
                   </thead>
                   <tbody>";
-            
+                  echo "<div id='user-form-$clubID' class='user-form' style='display: none;'>";
+                  echo "<form method='POST' action='backend/addusertoclub.php'>";
+                  echo "<input type='hidden' name='clubID' value='" . htmlspecialchars($clubID) . "'>";
+                  echo "<input type='text' name='name' placeholder='Name' required>";
+                  echo "<input type='email' name='email' placeholder='Email' required>";
+                  echo "<input type='text' name='role' placeholder='Role' required>";
+                  echo "<button type='submit' class='small-table-button'>Submit</button>";
+                  echo "</form>";
+                  echo "</div>";         
             $club_users_query = "
               SELECT u.*
               FROM USERS u
@@ -193,10 +204,47 @@
     }
   </script>
   <script>
-      function toggleEventForm() {
-        const form = document.getElementById('add-event-form-container');
-        form.classList.toggle('open');
+    function toggleEventForm() {
+      const form = document.getElementById('add-event-form-container');
+      form.classList.toggle('open');
+    }
+  </script>
+  <script>
+    function toggleUserForm(clubID) {
+      const form = document.getElementById(`user-form-${clubID}`);
+      if (form.style.display === "none") {
+        form.style.display = "block";
+      } else {
+        form.style.display = "none";
       }
+    }
+  </script>
+  <script>
+    function deleteClub(e, clubID) {
+      e.preventDefault();
+      fetch('backend/deleteclub.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `clubID=${clubID}`
+      })
+      .then(response => {
+        if (response.ok) {
+          const box = document.getElementById(`event-box-${clubID}`);
+          if (box) {
+            box.classList.add('fade-out');
+            setTimeout(() => box.remove(), 400);
+          }
+        } else {
+          return response.text().then(text => { throw new Error(text); });
+        }
+      })
+      .catch(err => {
+        alert("Failed to delete club: " + err.message);
+      });
+    }
+
     </script>
 </body>
 </html>
