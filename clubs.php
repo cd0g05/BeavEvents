@@ -178,73 +178,79 @@
   </footer>
 </div>
 
-  <script>
-    function removeUser(e, clubID, userID) {
-      e.preventDefault();
+<script>
+  function removeUser(e, clubID, userID) {
+    e.preventDefault();
 
-      fetch('backend/removeuserfromclub.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `clubID=${clubID}&userID=${userID}`
-      })
-      .then(response => {
-        if (response.ok) {
-          const row = document.getElementById(`club-row-${clubID}-${userID}`);
-          if (row) {
-            row.classList.add('fade-out');
-            setTimeout(() => row.remove(), 200);
-          }
-        } else {
-          return response.text().then(text => { throw new Error(text); });
+    fetch('backend/removeuserfromclub.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `clubID=${clubID}&userID=${userID}`
+    })
+    .then(response => {
+      if (response.ok) {
+        const row = document.getElementById(`club-row-${clubID}-${userID}`);
+        if (row) {
+          row.classList.add('fade-out');
+          setTimeout(() => row.remove(), 200);
         }
-      })
-      .catch(err => {
-        alert("Failed to remove club: " + err.message);
-      });
-    }
-  </script>
-  <script>
-    function toggleEventForm() {
-      const form = document.getElementById('add-event-form-container');
-      form.classList.toggle('open');
-    }
-  </script>
-  <script>
-    function toggleUserForm(clubID) {
-      const form = document.getElementById(`user-form-${clubID}`);
-      if (form.style.display === "none") {
-        form.style.display = "block";
       } else {
-        form.style.display = "none";
+        return response.text().then(text => { throw new Error(text); });
       }
+    })
+    .catch(err => {
+      alert("Failed to remove club: " + err.message);
+    });
+  }
+</script>
+<script>
+  function toggleEventForm() {
+    const form = document.getElementById('add-event-form-container');
+    form.classList.toggle('open');
+  }
+</script>
+<script>
+  function toggleUserForm(clubID) {
+    const form = document.getElementById(`user-form-${clubID}`);
+    if (form.style.display === "none") {
+      form.style.display = "block";
+    } else {
+      form.style.display = "none";
     }
-  </script>
-  <script>
-    function deleteClub(e, clubID) {
-      e.preventDefault();
-      fetch('backend/deleteclub.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `clubID=${clubID}`
-      })
-      .then(response => {
-        if (response.ok) {
-          const box = document.getElementById(`event-box-${clubID}`);
-          if (box) {
-            box.classList.add('fade-out');
-            setTimeout(() => box.remove(), 400);
-          }
-        } else {
-          return response.text().then(text => { throw new Error(text); });
-        }
-      })
-      .catch(err => {
-        alert("Failed to delete club: " + err.message);
-      });
-    }
+  }
+</script>
+<script>
+  function deleteClub(e, clubID) {
+    e.preventDefault();
+    console.log('Form submitted with values: ');
+    console.log(clubID);
 
-    </script>
+    fetch('backend/deleteclub.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `clubID=${clubID}`
+    })
+    
+
+    .then(response => {
+      if (response.ok) {
+        const box = document.getElementById(`event-box-${clubID}`);
+        if (box) {
+          box.classList.add('fade-out');
+          setTimeout(() => box.remove(), 400);
+        }
+      } else {
+        return response.text().then(text => { throw new Error(text); });
+      }
+    })
+    .catch(err => {
+      alert("Failed to delete club: " + err.message);
+    });
+    console.log('Form returned with values: ${clubID}');
+  }
+
+</script>
 </body>
 </html>
