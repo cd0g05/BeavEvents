@@ -1,4 +1,9 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+error_log("InDel Form submitted with values: " . print_r($_POST, true));
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 // Establish a connection to the MySQL database.
 // Parameters: hostname, username, password, database name.
 $link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_cripeca', '5036', 'cs340_cripeca');
@@ -19,11 +24,21 @@ if ($clubID >= 0 && $userID >= 0) {
 
     // Prepare the SQL DELETE query to remove the association between the club and the event.
     $delete_query = "DELETE FROM MEMBERSHIP WHERE clubID = $clubID AND userID = $userID";
-
+    
     // Attempt to execute the DELETE query.
     if (mysqli_query($link, $delete_query)) {
         // If the query succeeds, redirect the user back to the events page.
         header("Location: ../clubs.php");
+        $delete_user_rsvp = "
+            DELETE FROM RSVP
+            WHERE userID NOT IN (
+                SELECT userID FROM MEMBERSHIP
+            )";
+        mysqli_query($link, $delete_user_rsvp);
+        $delete_users = "
+            DELETE FROM USERS
+            WHERE userID = $userID";
+        mysqli_query($link, $delete_users);
         exit;
     } else {
         // If there's an error during the query, display the error message.

@@ -47,6 +47,13 @@ if ($clubID >= 0) {
             DELETE FROM MEMBERSHIP
             WHERE clubID = $clubID";
         mysqli_query($link, $delete_memberships);
+        $delete_user_rsvp = "
+            DELETE FROM RSVP
+            WHERE userID NOT IN (
+                SELECT userID FROM MEMBERSHIP
+            )";
+        mysqli_query($link, $delete_user_rsvp);
+        
         $delete_users = "
             DELETE FROM USERS
             WHERE userID NOT IN (

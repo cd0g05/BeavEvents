@@ -199,7 +199,7 @@
       }
     })
     .catch(err => {
-      alert("Failed to remove club: " + err.message);
+      alert("Failed to remove user: " + err.message);
     });
   }
 </script>
