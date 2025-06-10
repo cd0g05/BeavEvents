@@ -195,16 +195,13 @@
               }
               // SQL Query returns all userid and names of users within the clubs attatched to the event
               $club_users_query = "
-                SELECT DISTINCT u.userID, u.name
-                FROM EVENTCLUBS ec
-                JOIN MEMBERSHIP m ON ec.clubID = m.clubID
-                JOIN USERS u ON u.userID = m.userID
-                LEFT JOIN RSVP r ON u.userID = r.userID AND r.eventID = $eventID
-                WHERE ec.eventID = $eventID
-                AND r.userID IS NULL
+                CALL get_users_in_clubs($eventID);
               ";
               // stores names and ids from the above query into club_users_result
               $club_users_result = mysqli_query($link, $club_users_query);
+              while (mysqli_more_results($link) && mysqli_next_result($link)) {
+                // discard extra results from stored procedure
+            }
               // echo "<p>RSVP query returned " . mysqli_num_rows($club_users_result) . " users for event $eventID</p>";
 
               // verifies that query worked
@@ -268,7 +265,23 @@
           // Loop through each event
           while ($event = mysqli_fetch_assoc($events_result)) {
               $eventID = $event['eventID'];
+              $event_rsvps_query = "
+                  SELECT u.userID, u.name
+                  FROM RSVP r
+                  JOIN USERS u ON r.userID = u.userID
+                  WHERE r.eventID = $eventID;
+                ";
+                // stores names and ids from the above query into club_users_result
+                $event_rsvps_result = mysqli_query($link, $event_rsvps_query);
 
+                // echo "<p>RSVP query returned " . mysqli_num_rows($club_users_result) . " users for event $eventID</p>";
+
+                // verifies that query worked
+                if (!$event_rsvps_result) {
+                  echo "<p>SQL Error: " . mysqli_error($link) . "</p>";
+                  file_put_contents("debug.txt", "ERROR with club users query", FILE_APPEND);
+
+                }
               // Query to get total number of RSVPs for this event
               $total_rsvps_query = "SELECT COUNT(*) AS total FROM RSVP WHERE eventID = $eventID";
               $total_rsvps_result = mysqli_query($link, $total_rsvps_query);
@@ -287,7 +300,7 @@
               echo "<div class='table-button-box'>";
               
 
-              echo "<button type='button' class='table-button' onclick='leaveFeedback(event, $eventID)'>Leave Feedback</button>";
+              echo "<button type='button' class='table-button' onclick='leaveFeedback(" . htmlspecialchars($eventID) . ")'>Leave Feedback</button>";
 
               echo "</div>";
               echo "</div>";
@@ -321,14 +334,58 @@
 
               // Loop through clubs for this event
               while ($club = mysqli_fetch_assoc($clubs_result)) {
+                
+                
+
                 echo "<tr id='club-row-{$eventID}-{$club['clubID']}'> ";
                 echo "<td>" . htmlspecialchars($club['name']) . "</td>";
                 echo "<td>" . htmlspecialchars($club['advisor']) . "</td>";
                 echo "<td>" . htmlspecialchars($club['clubID']) . "</td>";
                 echo "<td>" . htmlspecialchars($club['club_rsvp_count']) . "</td>";
+                // file_put_contents("debug.txt", "5.3:\n", FILE_APPEND);
+
+                // file_put_contents("debug.txt", $event_rsvps_result, FILE_APPEND);
 
                 // Form to remove club from event
-               
+                // if (mysqli_num_rows($available_clubs_result) > 0) {
+                  echo "<div id='user-form-$eventID' class='user-form' style='display: none;'>";
+                  echo "<form method='POST' action='backend/leaveeventfeedback.php'>";
+                  echo "<input type='hidden' name='clubID' value='" . htmlspecialchars($eventID) . "'>";
+
+                  // User selection dropdown
+                  echo "<label for='userID-$eventID'>Select User:</label>";
+                  echo "<select name='userID' id='userID-$eventID' required>";
+                  if (mysqli_num_rows($event_rsvps_result) === 0) {
+                    echo "<option disabled selected>No users available</option>";
+                    $disable_rsvp_button = true;
+                  } else {
+                      $disable_rsvp_button = false;
+                      while ($rsvp_option = mysqli_fetch_assoc($event_rsvps_result)) {
+                          echo "<option value='" . htmlspecialchars($rsvp_option['userID']) . "'>" . htmlspecialchars($rsvp_option['name']) . "</option>";
+                      }
+                  }
+                  echo "</select>";
+                  echo "<br>";
+
+                  echo "<input type='text' name='feedback' placeholder='Feedback' required>";
+                  // echo "<br></br>";
+
+                  // Rating dropdown (1–5)
+                  echo "<label for='rating-$eventID'>Rating: ";
+                  echo "<select name='rating' id='rating-$eventID' required>";
+                  for ($i = 5; $i > 0; $i--) {
+                      echo "<option value='$i'>$i</option>";
+                  }
+                  echo "</select>";
+                  echo "<p>    </p>";
+
+                  echo "<button type='submit' class='small-table-button'>Submit</button>";
+                  echo "</label>";
+
+                  
+                  echo "</form>";
+                  echo "</div>";
+              // }
                 echo "</tr>";
             }
               echo "</tbody></table>";
@@ -385,6 +442,17 @@
         formDiv.style.display = 'block';
       } else {
         formDiv.style.display = 'none';
+      }
+    }
+  </script>
+  <script>
+    function leaveFeedback(eventID) {
+      // console.log("Couldn't find eventid form for feedback:", eventID);
+      const form = document.getElementById(`user-form-${eventID}`);
+      if (form.style.display === "none") {
+        form.style.display = "block";
+      } else {
+        form.style.display = "none";
       }
     }
   </script>

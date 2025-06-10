@@ -101,15 +101,7 @@
                       </tr>
                   </thead>
                   <tbody>";
-                  echo "<div id='user-form-$clubID' class='user-form' style='display: none;'>";
-                  echo "<form method='POST' action='backend/addusertoclub.php'>";
-                  echo "<input type='hidden' name='clubID' value='" . htmlspecialchars($clubID) . "'>";
-                  echo "<input type='text' name='name' placeholder='Name' required>";
-                  echo "<input type='email' name='email' placeholder='Email' required>";
-                  echo "<input type='text' name='role' placeholder='Role' required>";
-                  echo "<button type='submit' class='small-table-button'>Submit</button>";
-                  echo "</form>";
-                  echo "</div>";         
+                           
             $club_users_query = "
               SELECT u.*
               FROM USERS u
@@ -132,7 +124,9 @@
               echo "</form>";
               echo "</td>";
               echo "</tr>";
+
             }
+            
 
 
 
@@ -140,7 +134,15 @@
 
             // Query available clubs not already added to this event
             
-
+            echo "<div id='user-form-$clubID' class='user-form' style='display: none;'>";
+                  echo "<form method='POST' action='backend/addusertoclub.php'>";
+                  echo "<input type='hidden' name='clubID' value='" . htmlspecialchars($clubID) . "'>";
+                  echo "<input type='text' name='name' placeholder='Name' required>";
+                  echo "<input type='email' name='email' placeholder='Email' required>";
+                  echo "<input type='text' name='role' placeholder='Role' required>";
+                  echo "<button type='submit' class='small-table-button'>Submit</button>";
+                  echo "</form>";
+                  echo "</div>";
 
             echo "</div>"; // End of .club-box
         }
