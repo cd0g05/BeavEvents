@@ -331,7 +331,6 @@
                
                 echo "</tr>";
             }
-
               echo "</tbody></table>";
 
               // Query available clubs not already added to this event
