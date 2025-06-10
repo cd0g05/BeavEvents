@@ -32,7 +32,7 @@
         <!-- Navigation menu -->
         <nav class="menu-bar">
           <ul class="menu-list">
-            <li class="menu-item active"><a href="index.php">Home</a></li>
+            <li class="menu-item active"><a href="home.php">Home</a></li>
             <li class="menu-item"><a href="clubs.php">Clubs</a></li>
             <li class="menu-item"><a href="events.php">Events</a></li>
             <li class="menu-item"><a href="tutorial.php">Help</a></li>
