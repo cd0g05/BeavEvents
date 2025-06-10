@@ -85,7 +85,7 @@
           }
 
           // Query to get all events sorted by date
-          $events_query = "SELECT * FROM EVENTS ORDER BY eventDate ASC";
+          $events_query = "SELECT * FROM EVENTS WHERE eventDate > NOW() ORDER BY eventDate ASC";
           $events_result = mysqli_query($link, $events_query);
 
           // Loop through each event
@@ -232,6 +232,110 @@
                 echo "</form>";
                 echo "</div>";
               }
+
+
+              echo "</div>"; // End of .club-box
+          }
+
+          // Close database connection
+          mysqli_close($link);
+          ?>
+        </div>
+
+        <!-- Past Events -->
+
+        <div class="all-club-box">
+          
+          <strong class="subheader">Past Events:</strong>
+
+          <?php
+          // Enable error reporting
+
+          ini_set('display_errors', 1);
+          ini_set('display_startup_errors', 1);
+          error_reporting(E_ALL);
+
+          // Connect to MySQL database
+          $link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_cripeca', '5036', 'cs340_cripeca');
+          if (!$link) {
+              die("Connection failed: " . mysqli_connect_error());
+          }
+
+          // Query to get all events sorted by date
+          $events_query = "SELECT * FROM EVENTS WHERE eventDate < NOW() ORDER BY eventDate ASC;";
+          $events_result = mysqli_query($link, $events_query);
+
+          // Loop through each event
+          while ($event = mysqli_fetch_assoc($events_result)) {
+              $eventID = $event['eventID'];
+
+              // Query to get total number of RSVPs for this event
+              $total_rsvps_query = "SELECT COUNT(*) AS total FROM RSVP WHERE eventID = $eventID";
+              $total_rsvps_result = mysqli_query($link, $total_rsvps_query);
+              $total_rsvps = mysqli_fetch_assoc($total_rsvps_result)['total'];
+
+              // Display event details
+              echo "<div id='event-box-$eventID' class='club-box'>";
+
+              echo "<div class='club-header-row'>";
+              echo "<h2>" . htmlspecialchars($event['title']) . "</h2>";
+              echo "<p><strong>Date:</strong> " . htmlspecialchars($event['eventDate']) . "</p>";
+              echo "<p><strong>Location:</strong> " . htmlspecialchars($event['location']) . "</p>";
+              echo "<p><strong>Attended:</strong> $total_rsvps</p>";
+
+              // Event action buttons
+              echo "<div class='table-button-box'>";
+              
+
+              echo "<button type='button' class='table-button' onclick='leaveFeedback(event, $eventID)'>Leave Feedback</button>";
+
+              echo "</div>";
+              echo "</div>";
+
+              // Query clubs attending this event and their RSVP count
+              $clubs_query = "
+                  SELECT 
+                      c.clubID, c.name, c.advisor,
+                      COUNT(r.userID) AS club_rsvp_count
+                  FROM EVENTCLUBS ec
+                  JOIN CLUB c ON ec.clubID = c.clubID
+                  LEFT JOIN MEMBERSHIP m ON c.clubID = m.clubID
+                  LEFT JOIN RSVP r ON r.userID = m.userID AND r.eventID = ec.eventID
+                  WHERE ec.eventID = $eventID
+                  GROUP BY c.clubID
+              ";
+              $clubs_result = mysqli_query($link, $clubs_query);
+
+              // Display clubs table
+              echo "<table style='width: 100%; border-collapse: collapse;'>";
+              echo "<thead class='club-headers'>
+                        <tr>
+                          <th>Club</th>
+                          <th>Advisor</th>
+                          <th>Club ID</th>
+                          <th>#Attended</th>
+                          <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>";
+
+              // Loop through clubs for this event
+              while ($club = mysqli_fetch_assoc($clubs_result)) {
+                echo "<tr id='club-row-{$eventID}-{$club['clubID']}'> ";
+                echo "<td>" . htmlspecialchars($club['name']) . "</td>";
+                echo "<td>" . htmlspecialchars($club['advisor']) . "</td>";
+                echo "<td>" . htmlspecialchars($club['clubID']) . "</td>";
+                echo "<td>" . htmlspecialchars($club['club_rsvp_count']) . "</td>";
+
+                // Form to remove club from event
+               
+                echo "</tr>";
+            }
+
+              echo "</tbody></table>";
+
+              // Query available clubs not already added to this event
+              
 
 
               echo "</div>"; // End of .club-box

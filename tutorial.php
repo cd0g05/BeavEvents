@@ -57,8 +57,8 @@
 
       <!-- Placeholder image related to the clubs page -->
       <div class="fris-wrap">
-        <img src="assets/NoBackLogo.png" alt="Placeholder image of club page" class="help-photo" />
-        <p class="caption">Placeholder image. Will be a screenshot of clubs page</p>
+        <img src="assets/ClubsExample.png" alt="Example image of club page" class="help-photo" />
+        <p class="caption">Example image showing possible use of the Clubs page</p>
       </div>
     </div>
 
@@ -80,8 +80,8 @@
 
       <!-- Placeholder image related to the events page -->
       <div class="fris-wrap">
-        <img src="assets/NoBackLogo.png" alt="Placeholder image of events page" class="help-photo" />
-        <p class="caption">Placeholder image, will be a screenshot of the events page</p>
+        <img src="assets/EventsExample.png" alt="Example image of events page" class="help-photo" />
+        <p class="caption">Example image showing possible use of the Events page</p>
       </div>
     </div>
 
