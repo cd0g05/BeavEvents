@@ -408,3 +408,16 @@ button:hover {
   margin-top: 0.5rem;
 }
 
+
+/* 
+.edit-form {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+}
+
+.edit-form.open {
+  max-height: 500px;
+  opacity: 1;
+} */

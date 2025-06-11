@@ -76,6 +76,8 @@
             // Event action buttons
             echo "<div class='table-button-box'>";
             echo "<button class='table-button' type='button' onclick='toggleUserForm($clubID)'>Add New User</button>";
+            echo "<button class='table-button' type='button' onclick='toggleEditForm($clubID)'>Edit Club</button>";
+            
             // echo "</div>"; // closes table-button-box
             
                
@@ -87,9 +89,29 @@
             echo "</div>";
             echo "</div>";
 
-            
+            echo '<div id="edit-event-form-container-' . $clubID . '" class="edit-form" style="display: none;">';
+            echo '<form action="backend/editclub.php" method="POST" class="event-form">';
+            echo '<input type="hidden" name="clubID" value="' . htmlspecialchars($clubID) . '">';
+
+            echo '<label>';
+            echo 'New Club Name: <input type="text" name="clubTitle" required>';
+            echo '</label><br>';
+
+            echo '<label>';
+            echo 'New Club Advisor: <input type="text" name="clubAdvisor" required>';
+            echo '</label><br>';
+
+            echo '<label>';
+            echo 'New Club Category: <input type="text" name="clubCategory" required>';
+            echo '</label><br>';
+
+            echo '<button type="submit" class="tut-btn">Submit Club</button>';
+
+            echo '</form>';
+            echo '</div>';
 
             // Display clubs table
+
             echo "<table style='width: 100%; border-collapse: collapse;'>";
             echo "<thead class='club-headers'>
                       <tr>
@@ -210,6 +232,23 @@
     const form = document.getElementById('add-event-form-container');
     form.classList.toggle('open');
   }
+</script>
+<script>
+  function toggleEditForm(clubID) {
+    console.log('Clicked edit form');
+
+    const form = document.getElementById(`edit-event-form-container-${clubID}`);
+    if (form.style.display === "none" || form.style.display === "") {
+      console.log('display');
+
+      form.style.display = "block";
+    } else {
+      console.log('hide');
+
+      form.style.display = "none";
+    }
+  }
+
 </script>
 <script>
   function toggleUserForm(clubID) {
