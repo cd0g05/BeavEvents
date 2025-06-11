@@ -259,7 +259,7 @@
           }
 
           // Query to get all events sorted by date
-          $events_query = "SELECT * FROM EVENTS WHERE eventDate < NOW() ORDER BY eventDate ASC;";
+          $events_query = "SELECT * FROM EVENTS WHERE eventDate < NOW() ORDER BY eventDate DESC;";
           $events_result = mysqli_query($link, $events_query);
 
           // Loop through each event
@@ -273,9 +273,11 @@
                 ";
                 // stores names and ids from the above query into club_users_result
                 $event_rsvps_result = mysqli_query($link, $event_rsvps_query);
-
+                $get_avg_rating = "SELECT AVG(rating) AS averageRating FROM FEEDBACK WHERE eventID = " . intval($eventID);
                 // echo "<p>RSVP query returned " . mysqli_num_rows($club_users_result) . " users for event $eventID</p>";
-
+                $result = mysqli_query($link, $get_avg_rating);
+                $row = mysqli_fetch_assoc($result);
+                $avg = $row['averageRating'];
                 // verifies that query worked
                 if (!$event_rsvps_result) {
                   echo "<p>SQL Error: " . mysqli_error($link) . "</p>";
@@ -286,14 +288,14 @@
               $total_rsvps_query = "SELECT COUNT(*) AS total FROM RSVP WHERE eventID = $eventID";
               $total_rsvps_result = mysqli_query($link, $total_rsvps_query);
               $total_rsvps = mysqli_fetch_assoc($total_rsvps_result)['total'];
-
+              $avg_rating = mysqli_query($link, $get_avg_rating);
               // Display event details
               echo "<div id='event-box-$eventID' class='club-box'>";
 
               echo "<div class='club-header-row'>";
               echo "<h2>" . htmlspecialchars($event['title']) . "</h2>";
               echo "<p><strong>Date:</strong> " . htmlspecialchars($event['eventDate']) . "</p>";
-              echo "<p><strong>Location:</strong> " . htmlspecialchars($event['location']) . "</p>";
+              echo "<p><strong>Average Rating:</strong> $avg</p>";
               echo "<p><strong>Attended:</strong> $total_rsvps</p>";
 
               // Event action buttons
