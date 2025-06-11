@@ -1,3 +1,6 @@
+/*Carter Cripe and Owen Sexton */
+/* Group 10 */
+
 .home-wrapper {
   display: flex;
   flex-direction: column;
@@ -23,13 +26,6 @@
   margin: 0;
   color:#D63F09;
 }
-
-/* .nav-buttons {
-  gap: 1.5rem;
-  display: flex;
-  flex-direction: column;
-
-} */
 
 .home-content {
   padding: 1rem;
@@ -371,7 +367,7 @@ button:hover {
 }
 
 #add-event-form-container.open {
-  max-height: 800px; /* adjust based on your form's actual size */
+  max-height: 800px;
   padding: 1rem 0;
   opacity: 1;
 }

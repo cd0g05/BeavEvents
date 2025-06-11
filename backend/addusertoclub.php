@@ -1,3 +1,6 @@
+<!-- Carter Cripe and Owen Sexton -->
+<!-- Group 10 -->
+
 <?php
 $link = mysqli_connect('classmysql.engr.oregonstate.edu', 'cs340_cripeca', '5036', 'cs340_cripeca');
 if (!$link) {

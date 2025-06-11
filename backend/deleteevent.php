@@ -1,3 +1,6 @@
+<!-- Carter Cripe and Owen Sexton -->
+<!-- Group 10 -->
+
 <?php
 // Show all errors
 ini_set('display_errors', 1);
@@ -19,7 +22,7 @@ $eventID = intval($_POST['eventID']);
 if ($eventID > 0) {
     $delete_feedback_query = "DELETE FROM FEEDBACK WHERE eventID = $eventID";
     mysqli_query($link, $delete_feedback_query);
-    // Delete the event's RSVP records first (if your schema enforces foreign key constraints)
+    // Delete the event's RSVP records first
     $delete_rsvp_query = "DELETE FROM RSVP WHERE eventID = $eventID";
     mysqli_query($link, $delete_rsvp_query);
 
