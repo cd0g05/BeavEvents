@@ -57,8 +57,14 @@
             die("Connection failed: " . mysqli_connect_error());
         }
 
-        $query = "SELECT * FROM CLUB";
-        $result = mysqli_query($link, $query) or die(mysqli_error($link));
+        $query = "
+        SELECT c.*, COUNT(m.userID) AS memberCount
+        FROM CLUB c
+        LEFT JOIN MEMBERSHIP m ON c.clubID = m.clubID
+        GROUP BY c.clubID
+        ORDER BY memberCount DESC
+      ";
+              $result = mysqli_query($link, $query) or die(mysqli_error($link));
         while ($club = mysqli_fetch_assoc($result)) {
             $clubID = $club['clubID'];
 

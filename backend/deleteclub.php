@@ -43,6 +43,9 @@ if ($clubID >= 0) {
         
     }
     if ($userCount > 0) {
+        $delete_eventclubs = "DELETE FROM EVENTCLUBS WHERE clubID = $clubID";
+        mysqli_query($link, $delete_eventclubs);
+
         $delete_memberships = "
             DELETE FROM MEMBERSHIP
             WHERE clubID = $clubID";
