@@ -1,3 +1,6 @@
+<!-- Carter Cripe and Owen Sexton -->
+<!-- Group 10 -->
+
 <?php
 // Establish a connection to the MySQL database.
 // Parameters: hostname, username, password, database name.

@@ -1,3 +1,6 @@
+<!-- Carter Cripe and Owen Sexton -->
+<!-- Group 10 -->
+
 <?php
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -29,22 +32,6 @@ if ($clubID >= 0 && $userID >= 0) {
     if (mysqli_query($link, $delete_query)) {
         // If the query succeeds, redirect the user back to the events page.
         header("Location: ../clubs.php");
-        // $delete_user_rsvp = "
-        //     DELETE FROM RSVP
-        //     WHERE userID NOT IN (
-        //         SELECT userID FROM MEMBERSHIP
-        //     )";
-        // mysqli_query($link, $delete_user_rsvp);
-        // $delete_user_feedback = "
-        //     DELETE FROM FEEDBACK
-        //     WHERE userID NOT IN (
-        //         SELECT userID FROM MEMBERSHIP
-        //     )";
-        // mysqli_query($link, $delete_user_rsvp);
-        // $delete_users = "
-        //     DELETE FROM USERS
-        //     WHERE userID = $userID";
-        // mysqli_query($link, $delete_users);
         $call_del_users = "delete_users_not_in_membership()";
         if (mysqli_query($link, $call_del_users)) {
             exit;

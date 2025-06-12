@@ -1,3 +1,6 @@
+<!-- Carter Cripe and Owen Sexton -->
+<!-- Group 10 -->
+
 <?php
 // Show all errors
 ini_set('display_errors', 1);
@@ -67,7 +70,7 @@ if ($clubID >= 0) {
     // file_put_contents("debug.txt", "\nexit\n", FILE_APPEND);
     // file_put_contents("debug.txt", "6\n", FILE_APPEND);
 
-    // Delete the event's MEMBERSHIP records first (if your schema enforces foreign key constraints)
+    // Delete the event's MEMBERSHIP records first
     $delete_memb_query = "DELETE FROM MEMBERSHIP WHERE clubID = $clubID";
     mysqli_query($link, $delete_memb_query);
 
