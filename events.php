@@ -122,9 +122,7 @@
 
               // Query clubs attending this event and their RSVP count
               $clubs_query = "
-                  SELECT 
-                      c.clubID, c.name, c.advisor,
-                      COUNT(r.userID) AS club_rsvp_count
+                  SELECT c.clubID, c.name, c.advisor, COUNT(r.userID) AS club_rsvp_count
                   FROM EVENTCLUBS ec
                   JOIN CLUB c ON ec.clubID = c.clubID
                   LEFT JOIN MEMBERSHIP m ON c.clubID = m.clubID

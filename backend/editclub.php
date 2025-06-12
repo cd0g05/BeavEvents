@@ -27,8 +27,8 @@ $advis = mysqli_real_escape_string($link, $_POST['clubAdvisor']);
 $cat = mysqli_real_escape_string($link, $_POST['clubCategory']);
 
 
-$query = "UPDATE CLUB SET name='$title', advisor='$advis', category='$cat' WHERE clubID=$clubID";
-if (mysqli_query($link, $query)) {
+$edit_query = "UPDATE CLUB SET name='$title', advisor='$advis', category='$cat' WHERE clubID=$clubID";
+if (mysqli_query($link, $edit_query)) {
     header("Location: ../clubs.php");
     exit;
 } else {
